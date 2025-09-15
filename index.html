@@ -21,6 +21,7 @@
             --shadow-color: rgba(138, 138, 138, 0.1);
             --border-color: #FFDDE1;
             --danger-color: #ff7b7b;
+            --outer-ring-color: #F5F5F5; /* 定义外圈颜色 */
         }
 
         * {
@@ -88,15 +89,37 @@
         }
         #result-display.visible { opacity: 1; visibility: visible; transform: translateY(0); }
 
-        .turntable-wrapper { position: relative; display: flex; justify-content: center; align-items: center; }
+        .turntable-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 40px; 
+        }
+        
+        .turntable-wrapper { 
+            position: relative; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+
         #turntable-canvas { transition: transform 3s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer; }
+        
         .turntable-pointer {
-            position: absolute; width: 0; height: 0;
-            border-left: 15px solid transparent; border-right: 15px solid transparent;
-            border-top: 30px solid var(--dark-pink); 
-            bottom: 50%; left: 50%;
-            transform: translate(-50%, 155%);
-            z-index: 10; filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.2));
+            position: absolute;
+            width: 56px;
+            height: 45px;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, 40px) rotate(180deg);
+            z-index: 20;
+            filter: drop-shadow(0px 3px 5px rgba(0,0,0,0.2));
+        }
+        .turntable-pointer path {
+            fill: var(--outer-ring-color);
+            stroke: #DCDCDC;
+            stroke-width: 1.5px;
         }
 
         #spin-btn {
@@ -105,11 +128,11 @@
             box-shadow: 0 0 15px var(--shadow-color); font-size: 25px; font-weight: bold;
             color: var(--dark-pink); cursor: pointer; display: flex; justify-content: center;
             align-items: center; transition: transform 0.1s ease, background-color 0.2s ease;
+            z-index: 10;
         }
         #spin-btn:active { transform: scale(0.95); }
         #spin-btn:disabled { cursor: not-allowed; background-color: #f0f0f0; color: #aaa; }
 
-        /* --- 右下角编辑按钮 --- */
         #edit-btn {
             position: absolute; bottom: 30px; right: 30px; width: 60px; height: 60px;
             background-color: var(--main-pink); color: var(--white-color); border: none; border-radius: 50%;
@@ -119,7 +142,6 @@
         #edit-btn:hover { background-color: var(--dark-pink); }
         #edit-btn:active { transform: scale(0.9); }
 
-        /* --- 弹窗/模态框通用样式 --- */
         .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.4);
             display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden;
@@ -139,7 +161,6 @@
         .modal-body::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
         .modal-body::-webkit-scrollbar-thumb:hover { background: var(--main-pink); }
 
-        /* --- 编辑/添加弹窗 --- */
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; color: var(--text-color); font-weight: 500; }
         .form-group input[type="text"], .form-group input[type="number"] {
@@ -183,11 +204,9 @@
         .primary-btn:hover { background-color: var(--dark-pink); }
         .secondary-btn { background-color: #f0f0f0; color: var(--text-color); }
         
-        /* --- 其他弹窗 --- */
         .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; border-bottom: 1px solid var(--border-color); }
         .setting-item:last-child { border-bottom: none; }
         
-        /* ---【新增】自定义下拉菜单样式 --- */
         .custom-select { position: relative; width: 100px; }
         .custom-select select { display: none; }
         .select-selected {
@@ -214,7 +233,6 @@
             padding: 8px 12px; cursor: pointer; user-select: none;
         }
         .select-items div:hover, .same-as-selected { background-color: var(--bg-color); }
-        /* ------------------------------- */
 
         .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -252,10 +270,14 @@
 
     <main>
         <div id="result-display"></div>
-        <div class="turntable-wrapper">
-            <canvas id="turntable-canvas"></canvas>
-            <div id="spin-btn">转!</div>
-            <div class="turntable-pointer"></div>
+        <div class="turntable-container">
+            <svg class="turntable-pointer" viewBox="0 0 56 45" xmlns="http://www.w3.org/2000/svg">
+                <path d="M28 0 L56 45 L0 45 Z" />
+            </svg>
+            <div class="turntable-wrapper">
+                <canvas id="turntable-canvas"></canvas>
+                <div id="spin-btn">转!</div>
+            </div>
         </div>
     </main>
     
@@ -302,12 +324,8 @@
                     <span>转盘速度</span>
                     <div class="custom-select" id="speed-select-wrapper">
                         <select id="speed-select">
-                            <option value="3">3秒</option>
-                            <option value="5">5秒</option>
-                            <option value="7">7秒</option>
-                            <option value="9">9秒</option>
-                            <option value="12">12秒</option>
-                            <option value="15">15秒</option>
+                            <option value="3">3秒</option><option value="5">5秒</option><option value="7">7秒</option>
+                            <option value="9">9秒</option><option value="12">12秒</option><option value="15">15秒</option>
                             <option value="20">20秒</option>
                         </select>
                     </div>
@@ -339,7 +357,7 @@
 
     <div id="result-modal" class="modal">
         <div class="modal-content" id="result-modal-content">
-            <div class="modal-header">恭喜你抽中了</div>
+            <div class="modal-header" id="result-modal-header">恭喜你抽中了</div>
             <div id="result-text"></div>
             <div class="modal-footer" style="justify-content: center;">
                 <button id="close-result-btn" class="modal-btn primary-btn">好耶！</button>
@@ -386,6 +404,7 @@
             const turntableListEl = document.getElementById('turntable-list');
             const closeSwitcherBtn = document.getElementById('close-switcher-btn');
 
+            const resultModalHeader = document.getElementById('result-modal-header');
             const resultText = document.getElementById('result-text');
             const closeResultBtn = document.getElementById('close-result-btn');
             const resultDisplay = document.getElementById('result-display');
@@ -437,46 +456,82 @@
 
             const resizeCanvas = () => {
                 const main = document.querySelector('main');
-                const availableHeight = main.clientHeight - (resultDisplay.offsetHeight + 20);
+                const container = document.querySelector('.turntable-container');
+                const availableHeight = main.clientHeight - (resultDisplay.offsetHeight + 20) - (parseInt(getComputedStyle(container).paddingTop) || 0);
                 const size = Math.min(main.clientWidth * 0.9, availableHeight * 0.9);
                 canvas.width = size; canvas.height = size; drawTurntable();
             };
             
+            // ---【最终修改】绘图函数 ---
             const drawTurntable = () => {
                 const turntable = getCurrentTurntable();
-                if (!turntable || turntable.options.length === 0) { drawEmptyTurntable(); return; }
-                const options = turntable.options;
-                const totalRatio = options.reduce((acc, opt) => acc + opt.ratio, 0);
-                let startAngle = 0; const radius = canvas.width / 2;
-                ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.save(); ctx.translate(radius, radius);
-                options.forEach(option => {
-                    const arc = (option.ratio / totalRatio) * 2 * Math.PI; const endAngle = startAngle + arc;
-                    ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, radius, startAngle, endAngle); ctx.closePath();
-                    ctx.fillStyle = option.color; ctx.fill();
-                    ctx.save(); ctx.rotate(startAngle + arc / 2);
-                    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = getContrastColor(option.color);
-                    const fontSize = Math.max(12, Math.min(18, radius / 12));
-                    ctx.font = `bold ${fontSize}px "Smiley Sans", "LXGW WenKai Screen", sans-serif`;
-                    let text = option.name;
-                    const maxTextWidth = radius * 0.6;
-                    if (ctx.measureText(text).width > maxTextWidth) {
-                        while (ctx.measureText(text + '...').width > maxTextWidth && text.length > 1) text = text.slice(0, -1);
-                        text += '...';
-                    }
-                    ctx.fillText(text, radius * 0.85, 0); ctx.restore();
-                    startAngle = endAngle;
-                });
-                ctx.restore();
-            };
-            
-            const drawEmptyTurntable = () => {
                 const radius = canvas.width / 2;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.save(); ctx.translate(radius, radius);
-                ctx.beginPath(); ctx.arc(0, 0, radius - 2, 0, 2 * Math.PI); ctx.fillStyle = '#f8f8f8'; ctx.fill();
-                ctx.strokeStyle = '#e0e0e0'; ctx.lineWidth = 2; ctx.stroke();
-                ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#aaa';
-                ctx.font = '18px "Smiley Sans", "LXGW WenKai Screen", sans-serif'; ctx.fillText('请添加选项', 0, 0);
+                ctx.save();
+                ctx.translate(radius, radius);
+
+                const shadowPadding = 10;
+                const effectiveRadius = radius - shadowPadding;
+                const outerRingWidth = effectiveRadius * 0.1;
+                const innerRadius = effectiveRadius - outerRingWidth;
+                const outerRingColor = getComputedStyle(document.documentElement).getPropertyValue('--outer-ring-color').trim();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(0, 0, effectiveRadius, 0, 2 * Math.PI);
+                ctx.fillStyle = outerRingColor;
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.12)';
+                ctx.shadowBlur = 12;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 4;
+                ctx.fill();
+                ctx.restore();
+
+                if (!turntable || turntable.options.length === 0) {
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = '#aaa';
+                    ctx.font = '18px "Smiley Sans", "LXGW WenKai Screen", sans-serif';
+                    ctx.fillText('请添加选项', 0, 0);
+                    ctx.restore();
+                    return;
+                }
+
+                const options = turntable.options;
+                const totalRatio = options.reduce((acc, opt) => acc + opt.ratio, 0);
+                let startAngle = 0;
+
+                options.forEach(option => {
+                    const arc = (option.ratio / totalRatio) * 2 * Math.PI;
+                    const endAngle = startAngle + arc;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.arc(0, 0, innerRadius, startAngle, endAngle);
+                    ctx.closePath();
+                    ctx.fillStyle = option.color;
+                    ctx.fill();
+
+                    ctx.save();
+                    ctx.rotate(startAngle + arc / 2);
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = getContrastColor(option.color);
+                    const fontSize = Math.max(12, Math.min(18, innerRadius / 12));
+                    ctx.font = `bold ${fontSize}px "Smiley Sans", "LXGW WenKai Screen", sans-serif`;
+                    let text = option.name;
+                    const maxTextWidth = innerRadius * 0.6;
+                    if (ctx.measureText(text).width > maxTextWidth) {
+                        while (ctx.measureText(text + '...').width > maxTextWidth && text.length > 1) {
+                            text = text.slice(0, -1);
+                        }
+                        text += '...';
+                    }
+                    ctx.fillText(text, innerRadius * 0.85, 0);
+                    ctx.restore();
+
+                    startAngle = endAngle;
+                });
+                
                 ctx.restore();
             };
 
@@ -489,21 +544,26 @@
                 const turntable = getCurrentTurntable();
                 if (isSpinning || !turntable || turntable.options.length < 2) return;
                 isSpinning = true; isStoppingEarly = false; spinBtn.disabled = true; resultDisplay.classList.remove('visible');
+                
                 const weightedOptions = [];
                 turntable.options.forEach((option, index) => { for (let i = 0; i < option.ratio; i++) weightedOptions.push(index); });
                 const winnerIndex = weightedOptions[Math.floor(Math.random() * weightedOptions.length)];
                 currentWinner = turntable.options[winnerIndex];
+                
                 const totalRatio = turntable.options.reduce((acc, opt) => acc + opt.ratio, 0);
                 let startAngle = 0;
                 for (let i = 0; i < winnerIndex; i++) startAngle += (turntable.options[i].ratio / totalRatio) * 360;
                 const arc = (turntable.options[winnerIndex].ratio / totalRatio) * 360;
                 const targetAngle = startAngle + arc / 2;
+                
                 const fullRotations = 5 + Math.floor(Math.random() * 3);
-                const rotationToDo = 360 * fullRotations + (90 - targetAngle) - (rotation % 360);
+                const rotationToDo = 360 * fullRotations + (270 - targetAngle) - (rotation % 360);
                 rotation += rotationToDo;
+                
                 const speed = turntable.settings.speed || 5;
                 canvas.style.transition = `transform ${speed}s cubic-bezier(0.2, 0.8, 0.4, 1)`;
                 canvas.style.transform = `rotate(${rotation}deg)`;
+                
                 spinEndTimeoutId = setTimeout(onSpinEnd, speed * 1000);
             };
 
@@ -523,8 +583,14 @@
                 isSpinning = false; spinBtn.disabled = false; canvas.style.transition = 'none';
                 const actualRotation = rotation % 360;
                 canvas.style.transform = `rotate(${actualRotation}deg)`; rotation = actualRotation;
-                resultText.textContent = currentWinner.name; showModal(resultModal);
+                
                 const turntable = getCurrentTurntable();
+                const prefix = (turntable.resultPrefix || '恭喜你抽中了').replace(/xx/g, '');
+                resultModalHeader.textContent = prefix;
+                resultText.textContent = currentWinner.name; 
+                
+                showModal(resultModal);
+
                 if (turntable.settings.removeAfterSelect) {
                     const winnerIndex = turntable.options.findIndex(opt => opt === currentWinner);
                     if (winnerIndex > -1) { turntable.options.splice(winnerIndex, 1); saveData(); setTimeout(drawTurntable, 500); }
@@ -723,47 +789,37 @@
                 }
             });
 
-            // --- 【新增】自定义下拉菜单逻辑 ---
             function setupCustomSelect() {
                 const wrapper = document.getElementById('speed-select-wrapper');
-                if (!wrapper) return;
+                if (!wrapper || wrapper.querySelector('.select-selected')) return;
                 const select = wrapper.querySelector('select');
-                
                 const selectedDiv = document.createElement('DIV');
                 selectedDiv.setAttribute('class', 'select-selected');
                 selectedDiv.innerHTML = select.options[select.selectedIndex].innerHTML;
                 wrapper.appendChild(selectedDiv);
-                
                 const itemsDiv = document.createElement('DIV');
                 itemsDiv.setAttribute('class', 'select-items select-hide');
-
                 for (let i = 0; i < select.length; i++) {
                     const optionDiv = document.createElement('DIV');
                     optionDiv.innerHTML = select.options[i].innerHTML;
-                    if (select.options[i].value === select.value) {
-                         optionDiv.setAttribute('class', 'same-as-selected');
-                    }
+                    if (select.options[i].value === select.value) { optionDiv.setAttribute('class', 'same-as-selected'); }
                     optionDiv.addEventListener('click', function(e) {
                         for (let j = 0; j < select.length; j++) {
                             if (select.options[j].innerHTML == this.innerHTML) {
                                 select.selectedIndex = j;
                                 selectedDiv.innerHTML = this.innerHTML;
                                 const y = this.parentNode.getElementsByClassName('same-as-selected');
-                                for (let k = 0; k < y.length; k++) {
-                                    y[k].removeAttribute('class');
-                                }
+                                for (let k = 0; k < y.length; k++) { y[k].removeAttribute('class'); }
                                 this.setAttribute('class', 'same-as-selected');
                                 break;
                             }
                         }
                         selectedDiv.click();
-                        // 关键：手动触发原生select的change事件，以保存设置
                         select.dispatchEvent(new Event('change'));
                     });
                     itemsDiv.appendChild(optionDiv);
                 }
                 wrapper.appendChild(itemsDiv);
-
                 selectedDiv.addEventListener('click', function(e) {
                     e.stopPropagation();
                     closeAllSelect(this);
@@ -775,27 +831,17 @@
             function closeAllSelect(elmnt) {
                 const items = document.getElementsByClassName('select-items');
                 const selected = document.getElementsByClassName('select-selected');
-                for (let i = 0; i < selected.length; i++) {
-                    if (elmnt != selected[i]) {
-                        selected[i].classList.remove('select-arrow-active');
-                    }
-                }
-                 for (let i = 0; i < items.length; i++) {
-                    if (elmnt.nextSibling != items[i]) {
-                        items[i].classList.add('select-hide');
-                    }
-                }
+                for (let i = 0; i < selected.length; i++) { if (elmnt != selected[i]) { selected[i].classList.remove('select-arrow-active'); } }
+                for (let i = 0; i < items.length; i++) { if (elmnt.nextSibling != items[i]) { items[i].classList.add('select-hide'); } }
             }
             document.addEventListener('click', closeAllSelect);
-            // ---------------------------------
 
             const init = () => {
                 loadData();
                 setupEventListeners();
                 updateUI();
-                setupCustomSelect(); // 初始化自定义下拉菜单
+                setupCustomSelect();
                 resizeCanvas();
-                drawTurntable();                
             };
             init();
         });
