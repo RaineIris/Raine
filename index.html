@@ -21,6 +21,7 @@
             --shadow-color: rgba(138, 138, 138, 0.1);
             --border-color: #FFDDE1;
             --danger-color: #ff7b7b;
+            --danger-hover-color: #e66b6b;
             --outer-ring-color: #F5F5F5; /* 定义外圈颜色 */
         }
 
@@ -35,16 +36,22 @@
             font-family: "Smiley Sans", "LXGW WenKai Screen", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            height: 100vh;
-            overflow: hidden;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+        }
+
+        /* 应用主容器，用于响应式布局 */
+        #app-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 100vh;
+            display: grid; /* 改为Grid布局 */
+            grid-template-rows: auto 1fr; /* 标题行高度自动，内容行占据剩余全部空间 */
+            position: relative;
+            overflow: hidden;
         }
 
         /* --- 顶部栏 --- */
@@ -54,9 +61,6 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 20px;
-            position: absolute;
-            top: 0;
-            left: 0;
             z-index: 100;
         }
 
@@ -76,8 +80,14 @@
         
         /* --- 主要内容区域 --- */
         main {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            width: 100%; height: 100%; padding-top: 60px; padding-bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            /* 移除了 flex-grow: 1，因为Grid布局负责高度控制 */
+            min-height: 0;
+            padding-bottom: 80px;
         }
 
         #result-display {
@@ -155,13 +165,14 @@
         }
         .modal.show .modal-content { transform: scale(1); }
         .modal-header { font-size: 24px; font-weight: bold; color: var(--dark-pink); text-align: center; margin-bottom: 20px; }
-        .modal-body { overflow-y: auto; flex-grow: 1; padding-right: 5px; }
+        .modal-body { overflow-y: auto; flex-grow: 1; padding-right: 5px; text-align: center; } /* 默认为居中 */
+        .modal-body.text-left { text-align: left; } /* 可选的左对齐样式 */
         .modal-body::-webkit-scrollbar { width: 6px; }
         .modal-body::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         .modal-body::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
         .modal-body::-webkit-scrollbar-thumb:hover { background: var(--main-pink); }
 
-        .form-group { margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; text-align: left; }
         .form-group label { display: block; margin-bottom: 5px; color: var(--text-color); font-weight: 500; }
         .form-group input[type="text"], .form-group input[type="number"] {
             width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px;
@@ -203,6 +214,8 @@
         .primary-btn { background-color: var(--main-pink); color: var(--white-color); }
         .primary-btn:hover { background-color: var(--dark-pink); }
         .secondary-btn { background-color: #f0f0f0; color: var(--text-color); }
+        .danger-btn { background-color: var(--danger-color); color: var(--white-color); }
+        .danger-btn:hover { background-color: var(--danger-hover-color); }
         
         .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; border-bottom: 1px solid var(--border-color); }
         .setting-item:last-child { border-bottom: none; }
@@ -241,7 +254,7 @@
         input:checked + .slider { background-color: var(--main-pink); }
         input:checked + .slider:before { transform: translateX(22px); }
         
-        #turntable-list { list-style: none; }
+        #turntable-list { list-style: none; text-align: left; }
         .turntable-list-item {
             padding: 15px; margin: 5px 0; background-color: var(--bg-color); border-radius: 10px;
             cursor: pointer; transition: background-color 0.2s; display: flex; justify-content: space-between; align-items: center;
@@ -250,8 +263,10 @@
         .delete-turntable-btn { background: none; border: none; color: var(--danger-color); font-size: 18px; cursor: pointer; padding: 5px; }
         .turntable-list-item.active .delete-turntable-btn { color: var(--white-color); }
         
-        #result-modal-content { text-align: center; }
-        #result-text { font-size: 28px; font-weight: bold; color: var(--dark-pink); margin: 20px 0; word-break: break-all; }
+        #result-modal-content, #confirm-modal-content, #alert-modal-content { text-align: center; }
+        #result-text, #confirm-text, #alert-text { font-size: 20px; color: var(--text-color); margin: 20px 0; word-break: break-all; line-height: 1.6; }
+        #result-text { font-size: 28px; font-weight: bold; color: var(--dark-pink); }
+
         .option-item.selected-for-delete { background-color: #ffe0e0; border-radius: 8px; }
         #bulk-delete-footer { display: none; }
         
@@ -259,34 +274,36 @@
 </head>
 <body>
 
-    <header>
-        <button id="settings-btn" class="top-btn">⚙️</button>
-        <div class="turntable-title-container" id="turntable-title-container">
-            <span id="turntable-name">转盘</span>
-            <span id="turntable-name-arrow">▼</span>
-        </div>
-        <button id="add-turntable-btn" class="top-btn">➕</button>
-    </header>
-
-    <main>
-        <div id="result-display"></div>
-        <div class="turntable-container">
-            <svg class="turntable-pointer" viewBox="0 0 56 45" xmlns="http://www.w3.org/2000/svg">
-                <path d="M28 0 L56 45 L0 45 Z" />
-            </svg>
-            <div class="turntable-wrapper">
-                <canvas id="turntable-canvas"></canvas>
-                <div id="spin-btn">转!</div>
+    <div id="app-container">
+        <header>
+            <button id="settings-btn" class="top-btn">⚙️</button>
+            <div class="turntable-title-container" id="turntable-title-container">
+                <span id="turntable-name">转盘</span>
+                <span id="turntable-name-arrow">▼</span>
             </div>
-        </div>
-    </main>
-    
-    <button id="edit-btn">✏️</button>
+            <button id="add-turntable-btn" class="top-btn">➕</button>
+        </header>
+
+        <main>
+            <div id="result-display"></div>
+            <div class="turntable-container">
+                <svg class="turntable-pointer" viewBox="0 0 56 45" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M28 0 L56 45 L0 45 Z" />
+                </svg>
+                <div class="turntable-wrapper">
+                    <canvas id="turntable-canvas"></canvas>
+                    <div id="spin-btn">转!</div>
+                </div>
+            </div>
+        </main>
+        
+        <button id="edit-btn">✏️</button>
+    </div>
 
     <div id="edit-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header" id="edit-modal-title">编辑转盘</div>
-            <div class="modal-body">
+            <div class="modal-body text-left">
                 <div class="form-group">
                     <label for="new-turntable-name">转盘名字</label>
                     <input type="text" id="new-turntable-name" placeholder="输入转盘名字">
@@ -311,7 +328,7 @@
             </div>
             <div class="modal-footer" id="bulk-delete-footer">
                 <button id="cancel-delete-btn" class="modal-btn secondary-btn">取消</button>
-                <button id="confirm-delete-btn" class="modal-btn primary-btn" style="background-color: var(--danger-color);">删除选中</button>
+                <button id="confirm-delete-btn" class="modal-btn danger-btn">删除选中</button>
             </div>
         </div>
     </div>
@@ -319,7 +336,7 @@
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">设置</div>
-            <div class="modal-body">
+            <div class="modal-body text-left">
                 <div class="setting-item">
                     <span>转盘速度</span>
                     <div class="custom-select" id="speed-select-wrapper">
@@ -338,6 +355,17 @@
                     <span>点击停止</span>
                     <label class="switch"><input type="checkbox" id="click-to-stop-toggle"><span class="slider"></span></label>
                 </div>
+                
+                <hr style="border: none; border-top: 1px solid var(--border-color); margin: 20px 0;">
+                <div class="form-group">
+                    <label style="text-align: center; margin-bottom: 15px; font-size: 18px; color: var(--dark-pink);">数据管理</label>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="import-data-btn" class="modal-btn secondary-btn">导入数据</button>
+                        <button id="export-data-btn" class="modal-btn secondary-btn">导出数据</button>
+                    </div>
+                    <input type="file" id="import-file-input" accept=".json" style="display: none;">
+                </div>
+
             </div>
             <div class="modal-footer" style="justify-content: center;">
                 <button id="close-settings-btn" class="modal-btn primary-btn">完成</button>
@@ -365,6 +393,28 @@
         </div>
     </div>
 
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content" id="confirm-modal-content">
+            <div class="modal-header" id="confirm-header">请确认</div>
+            <div id="confirm-text"></div>
+            <div class="modal-footer" style="justify-content: center;">
+                <button id="confirm-cancel-btn" class="modal-btn secondary-btn">取消</button>
+                <button id="confirm-ok-btn" class="modal-btn danger-btn">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert-modal" class="modal">
+        <div class="modal-content" id="alert-modal-content">
+            <div class="modal-header" id="alert-header">提示</div>
+            <div id="alert-text"></div>
+            <div class="modal-footer" style="justify-content: center;">
+                <button id="alert-ok-btn" class="modal-btn primary-btn">好的</button>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('turntable-canvas');
@@ -380,6 +430,8 @@
             const settingsModal = document.getElementById('settings-modal');
             const switcherModal = document.getElementById('switcher-modal');
             const resultModal = document.getElementById('result-modal');
+            const confirmModal = document.getElementById('confirm-modal');
+            const alertModal = document.getElementById('alert-modal');
 
             const editModalTitle = document.getElementById('edit-modal-title');
             const newTurntableNameInput = document.getElementById('new-turntable-name');
@@ -457,12 +509,12 @@
             const resizeCanvas = () => {
                 const main = document.querySelector('main');
                 const container = document.querySelector('.turntable-container');
-                const availableHeight = main.clientHeight - (resultDisplay.offsetHeight + 20) - (parseInt(getComputedStyle(container).paddingTop) || 0);
+                const resultDisplayHeight = resultDisplay.classList.contains('visible') ? (resultDisplay.offsetHeight + 20) : 0;
+                const availableHeight = main.clientHeight - resultDisplayHeight - (parseInt(getComputedStyle(container).paddingTop) || 0);
                 const size = Math.min(main.clientWidth * 0.9, availableHeight * 0.9);
                 canvas.width = size; canvas.height = size; drawTurntable();
             };
             
-            // ---【最终修改】绘图函数 ---
             const drawTurntable = () => {
                 const turntable = getCurrentTurntable();
                 const radius = canvas.width / 2;
@@ -600,6 +652,47 @@
             const showModal = (modal) => modal.classList.add('show');
             const hideModal = (modal) => modal.classList.remove('show');
 
+            const showAlert = (message, title = '提示') => {
+                return new Promise((resolve) => {
+                    const alertText = document.getElementById('alert-text');
+                    const alertHeader = document.getElementById('alert-header');
+                    const okBtn = document.getElementById('alert-ok-btn');
+                    alertHeader.textContent = title;
+                    alertText.textContent = message;
+                    showModal(alertModal);
+                    const handleOk = () => {
+                        hideModal(alertModal);
+                        okBtn.removeEventListener('click', handleOk);
+                        resolve();
+                    };
+                    okBtn.addEventListener('click', handleOk);
+                });
+            };
+
+            const showConfirm = (message, title = '请确认') => {
+                return new Promise((resolve) => {
+                    const confirmText = document.getElementById('confirm-text');
+                    const confirmHeader = document.getElementById('confirm-header');
+                    const okBtn = document.getElementById('confirm-ok-btn');
+                    const cancelBtn = document.getElementById('confirm-cancel-btn');
+                    confirmHeader.textContent = title;
+                    confirmText.textContent = message;
+                    showModal(confirmModal);
+
+                    const cleanup = (result) => {
+                        hideModal(confirmModal);
+                        okBtn.removeEventListener('click', handleOk);
+                        cancelBtn.removeEventListener('click', handleCancel);
+                        resolve(result);
+                    };
+                    const handleOk = () => cleanup(true);
+                    const handleCancel = () => cleanup(false);
+
+                    okBtn.addEventListener('click', handleOk);
+                    cancelBtn.addEventListener('click', handleCancel);
+                });
+            };
+
             const updateUI = () => {
                 const turntable = getCurrentTurntable();
                 if (turntable) {
@@ -608,6 +701,12 @@
                     removeToggle.checked = turntable.settings.removeAfterSelect;
                     clickStopToggle.checked = turntable.settings.clickToStop;
                     spinBtn.disabled = turntable.options.length < 2;
+                    
+                    const selectedDiv = document.querySelector('#speed-select-wrapper .select-selected');
+                    if (selectedDiv) {
+                        const matchingOption = Array.from(speedSelect.options).find(opt => opt.value == turntable.settings.speed);
+                        if (matchingOption) selectedDiv.innerHTML = matchingOption.innerHTML;
+                    }
                 } else {
                     turntableNameEl.textContent = '没有转盘'; spinBtn.disabled = true;
                 }
@@ -754,8 +853,73 @@
                     const prefix = turntable ? turntable.resultPrefix : '刚刚抽中了';
                     resultDisplay.textContent = `${prefix}: ${currentWinner.name}`;
                     resultDisplay.classList.add('visible');
+                    setTimeout(resizeCanvas, 50);
                 });
                 cancelEditBtn.addEventListener('click', () => { hideModal(editModal); exitBulkDeleteMode(); });
+
+                const importDataBtn = document.getElementById('import-data-btn');
+                const exportDataBtn = document.getElementById('export-data-btn');
+                const importFileInput = document.getElementById('import-file-input');
+
+                exportDataBtn.addEventListener('click', async () => {
+                    try {
+                        const dataStr = JSON.stringify(appData, null, 2);
+                        const blob = new Blob([dataStr], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-').replace('T', '_');
+                        a.download = `turntable-backup-${timestamp}.json`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    } catch (error) {
+                        console.error('Failed to export data:', error);
+                        await showAlert('导出数据失败！', '错误');
+                    }
+                });
+
+                importDataBtn.addEventListener('click', () => {
+                    importFileInput.click();
+                });
+
+                importFileInput.addEventListener('change', async (event) => {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    const confirmed = await showConfirm('导入数据将会覆盖当前所有转盘，确定要继续吗？', '重要操作');
+                    if (!confirmed) {
+                        importFileInput.value = '';
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        try {
+                            const importedData = JSON.parse(e.target.result);
+                            if (importedData && Array.isArray(importedData.turntables) && 'currentTurntableId' in importedData) {
+                                appData = importedData;
+                                saveData();
+                                updateUI();
+                                hideModal(settingsModal);
+                                await showAlert('数据导入成功！页面已刷新。', '成功');
+                            } else {
+                                throw new Error('Invalid data structure.');
+                            }
+                        } catch (error) {
+                            console.error('Failed to import data:', error);
+                            await showAlert('导入失败！文件格式不正确或已损坏。', '导入错误');
+                        } finally {
+                            importFileInput.value = '';
+                        }
+                    };
+                    reader.onerror = async () => {
+                        await showAlert('读取文件时发生错误。', '文件错误');
+                        importFileInput.value = '';
+                    };
+                    reader.readAsText(file);
+                });
             };
 
             const renderTurntableList = () => {
@@ -771,12 +935,13 @@
                 });
             };
             
-            turntableListEl.addEventListener('click', (e) => {
+            turntableListEl.addEventListener('click', async (e) => {
                 const target = e.target;
                 if (target.classList.contains('delete-turntable-btn')) {
                     e.stopPropagation();
                     const id = parseInt(target.dataset.id), name = target.dataset.name;
-                    if (confirm(`确定要删除转盘 "${name}" 吗？`)) {
+                    const confirmed = await showConfirm(`确定要删除转盘 "${name}" 吗？此操作无法撤销。`, '删除确认');
+                    if (confirmed) {
                         appData.turntables = appData.turntables.filter(t => t.id !== id);
                         if (appData.currentTurntableId === id) appData.currentTurntableId = appData.turntables.length > 0 ? appData.turntables[0].id : null;
                         saveData(); renderTurntableList(); updateUI();
@@ -839,8 +1004,8 @@
             const init = () => {
                 loadData();
                 setupEventListeners();
-                updateUI();
                 setupCustomSelect();
+                updateUI();
                 resizeCanvas();
             };
             init();
