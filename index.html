@@ -525,6 +525,63 @@
                      inset 0 2px 5px rgba(146,89,174,.14);
         }
 
+    
+        /* Unified dimensional candy buttons: concentric bevel, no displaced duplicate shapes */
+        .top-btn,#add-turntable-btn,#edit-btn,#spin-btn,.modal-btn{
+          background-clip:padding-box;
+          transition:transform .16s ease,box-shadow .16s ease,filter .16s ease;
+        }
+        .top-btn{
+          box-shadow:0 8px 15px rgba(172,115,183,.16),
+            inset 0 3px 3px rgba(255,255,255,.94),
+            inset 0 -5px 5px rgba(158,101,184,.20),
+            inset 3px 0 4px rgba(255,255,255,.36);
+        }
+        #add-turntable-btn{
+          box-shadow:0 8px 15px rgba(193,113,157,.16),
+            inset 0 3px 3px rgba(255,255,255,.95),
+            inset 0 -5px 5px rgba(199,102,155,.22),
+            inset 3px 0 4px rgba(255,255,255,.36);
+        }
+        #edit-btn{
+          box-shadow:0 9px 17px rgba(163,111,188,.21),
+            inset 0 3px 4px rgba(255,255,255,.90),
+            inset 0 -6px 7px rgba(135,77,170,.24),
+            inset 3px 0 4px rgba(255,255,255,.28);
+        }
+        #spin-btn{
+          box-shadow:0 8px 16px rgba(181,97,159,.20),
+            inset 0 4px 5px rgba(255,255,255,.96),
+            inset 0 -7px 8px rgba(182,79,154,.22),
+            inset 3px 0 5px rgba(255,255,255,.4);
+        }
+        .modal-btn{
+          border:2px solid rgba(255,255,255,.95);
+          box-shadow:0 5px 12px rgba(181,125,184,.15),
+            inset 0 3px 3px rgba(255,255,255,.65),
+            inset 0 -5px 5px rgba(152,95,171,.13);
+        }
+        .secondary-btn{
+          box-shadow:0 5px 12px rgba(181,125,184,.13),
+            inset 0 3px 3px #fff,
+            inset 0 -5px 5px rgba(211,161,203,.18);
+        }
+        .danger-btn{
+          box-shadow:0 5px 12px rgba(193,100,139,.17),
+            inset 0 3px 3px rgba(255,255,255,.66),
+            inset 0 -5px 5px rgba(175,69,111,.20);
+        }
+        .top-btn:active,#add-turntable-btn:active,#edit-btn:active{
+          transform:translateY(1px) scale(.97);
+          filter:brightness(.98);
+        }
+        #spin-btn:active{transform:scale(.96);filter:brightness(.98)}
+        .modal-btn:active{
+          transform:translateY(1px) scale(.985);
+          box-shadow:0 2px 6px rgba(181,125,184,.12),
+            inset 0 3px 6px rgba(140,80,159,.18);
+        }
+
     </style>
 </head>
 <body>
