@@ -270,18 +270,63 @@
         .option-item.selected-for-delete { background-color: #ffe0e0; border-radius: 8px; }
         #bulk-delete-footer { display: none; }
         
+
+        /* Frosted silver-blue visual refresh. Existing copy and behavior are unchanged. */
+        :root {
+            --bg-color:#F1F4F8; --main-pink:#91A9C2; --dark-pink:#53677F;
+            --text-color:#43566B; --white-color:#FFFFFF;
+            --shadow-color:rgba(67,86,107,.15); --border-color:#DCE5EF;
+            --danger-color:#B96F79; --danger-hover-color:#A75D69;
+            --outer-ring-color:#DCE5EF;
+        }
+        body {background:radial-gradient(ellipse at 14% 12%,#fff 0%,transparent 48%),radial-gradient(ellipse at 90% 86%,#DCE6F1 0%,transparent 52%),#F1F4F8;}
+        #app-container {isolation:isolate;}
+        header {padding:18px 22px;}
+        .ui-icon {width:22px;height:22px;display:block;pointer-events:none;}
+        .top-btn {width:46px;height:46px;display:grid;place-items:center;font-size:unset;color:#53677F;border:1px solid rgba(255,255,255,.95);border-radius:15px;background:linear-gradient(145deg,rgba(255,255,255,.93),rgba(221,232,242,.84));box-shadow:0 6px 16px rgba(74,96,121,.12),inset 0 1px 1px #fff,inset 0 -1px 2px rgba(84,107,130,.07);transition:transform .16s,box-shadow .16s;}
+        .top-btn:active {transform:translateY(2px) scale(.97);box-shadow:0 2px 5px rgba(74,96,121,.12),inset 0 2px 5px rgba(84,107,130,.13);}
+        #turntable-name {color:#53677F;font-weight:650;letter-spacing:.02em;}
+        #turntable-name-arrow {color:#91A9C2;}
+        #result-display {background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#53677F;box-shadow:0 8px 26px rgba(74,96,121,.12);}
+        .turntable-wrapper {filter:drop-shadow(0 12px 18px rgba(76,99,125,.16));}
+        .turntable-pointer {filter:drop-shadow(0 3px 4px rgba(68,89,111,.22));}
+        .turntable-pointer path {fill:#F5F8FC;stroke:#A3B5C9;stroke-width:2px;}
+        #spin-btn {background:linear-gradient(150deg,#FFFFFF 0%,#EFF4FA 48%,#C8D6E5 100%);border:5px solid #D4E0EC;color:#435B75;box-shadow:0 8px 19px rgba(63,88,116,.25),inset 0 3px 4px #fff,inset 0 -4px 8px rgba(78,102,129,.14);text-shadow:0 1px 0 #fff;transition:transform .12s,box-shadow .12s;}
+        #spin-btn:active {transform:scale(.94);box-shadow:0 3px 8px rgba(63,88,116,.18),inset 0 3px 9px rgba(78,102,129,.23);}
+        #edit-btn {width:58px;height:58px;background:linear-gradient(145deg,#829CB8,#536D89);border:1px solid rgba(255,255,255,.65);box-shadow:0 8px 20px rgba(69,91,116,.26),inset 0 2px 2px rgba(255,255,255,.35);font-size:unset;}
+        #edit-btn:hover {background:linear-gradient(145deg,#7895B1,#4F6985);}
+        #edit-btn:active {transform:translateY(2px) scale(.96);}
+        #edit-btn .ui-icon {width:25px;height:25px;}
+        .modal {background:rgba(45,63,83,.32);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);}
+        .modal-content {background:linear-gradient(150deg,rgba(255,255,255,.94),rgba(236,243,250,.88));border:1px solid rgba(255,255,255,.92);border-radius:24px;box-shadow:0 22px 65px rgba(46,65,89,.23),inset 0 1px 1px #fff;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);}
+        .modal-header {color:#435B75;}
+        .form-group input[type="text"],.form-group input[type="number"],.bulk-add-container input,.option-name,.option-ratio {background:rgba(255,255,255,.78);border:1px solid #D7E2ED;border-radius:12px;color:#43566B;}
+        .form-group input:focus {border-color:#91A9C2;box-shadow:0 0 0 3px rgba(145,169,194,.19);}
+        .modal-btn {border-radius:13px;border:1px solid rgba(255,255,255,.7);box-shadow:0 4px 10px rgba(67,86,107,.12),inset 0 1px 1px rgba(255,255,255,.45);transition:transform .15s,box-shadow .15s,background .15s;}
+        .modal-btn:active {transform:translateY(2px) scale(.99);box-shadow:inset 0 2px 6px rgba(51,74,99,.18);}
+        .primary-btn {background:linear-gradient(145deg,#849EB9,#526D89);color:#fff;}
+        .primary-btn:hover {background:linear-gradient(145deg,#7893AF,#496581);}
+        .secondary-btn {background:linear-gradient(145deg,#FFFFFF,#E4EBF3);color:#52677F;}
+        .danger-btn {background:linear-gradient(145deg,#C48A93,#A96672);}
+        .danger-btn:hover {background:linear-gradient(145deg,#B77D88,#9C5B66);}
+        .option-item,.turntable-list-item {border-radius:13px;}
+        .option-delete-btn,.delete-turntable-btn {display:inline-grid;place-items:center;color:#9C6F79;}
+        .option-delete-btn .ui-icon,.delete-turntable-btn .ui-icon {width:19px;height:19px;}
+        .slider {background-color:#D7E2ED;}
+        .slider:before {box-shadow:0 2px 5px rgba(67,86,107,.16);}
+        @media(max-width:390px){header{padding:13px 15px}.top-btn{width:42px;height:42px}.modal-content{padding:19px}}
     </style>
 </head>
 <body>
 
     <div id="app-container">
         <header>
-            <button id="settings-btn" class="top-btn">⚙️</button>
+            <button id="settings-btn" class="top-btn" aria-label="设置"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.5" fill="currentColor" stroke="none"/><circle cx="16" cy="17" r="2.5" fill="currentColor" stroke="none"/></svg></button>
             <div class="turntable-title-container" id="turntable-title-container">
                 <span id="turntable-name">转盘</span>
                 <span id="turntable-name-arrow">▼</span>
             </div>
-            <button id="add-turntable-btn" class="top-btn">➕</button>
+            <button id="add-turntable-btn" class="top-btn" aria-label="添加转盘"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
         </header>
 
         <main>
@@ -297,7 +342,7 @@
             </div>
         </main>
         
-        <button id="edit-btn">✏️</button>
+        <button id="edit-btn" aria-label="编辑转盘"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9M16 4l4 4-11 11-5 1 1-5L16 4z"/></svg></button>
     </div>
 
     <div id="edit-modal" class="modal">
@@ -472,9 +517,9 @@
             const longPressDuration = 800;
             
             const pastelColors = [
-                '#FFADAD', '#FFD6A5', '#FDFFB6', '#CAFFBF', '#9BF6FF', '#A0C4FF', '#BDB2FF', '#FFC6FF',
-                '#FADADD', '#E6E6FA', '#D4F0F0', '#F0EAD6', '#FDEDC8', '#C4D7B2', '#A1CCD1', '#E2BBE9',
-                '#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#C0B3FF', '#E4B3FF', '#FFB3E6'
+                '#B9CADD','#DCE6F0','#9EB5CE','#CBD8E6','#A8BFD2','#E7EDF5','#8FA9C3','#CFDBE9',
+                '#B3C4D5','#D6E1EC','#9FB1C5','#E3EAF2','#B7C9DD','#C9D7E6','#A4BAD0','#EEF2F7',
+                '#A7C1D2','#D9E3EF','#91AAC2','#D3DEEA','#BFCFE0','#E6ECF3','#A8BCD2','#CAD8E8'
             ];
 
             const saveData = () => localStorage.setItem('sakuraTurntableApp', JSON.stringify(appData));
@@ -732,7 +777,7 @@
                         <input type="color" class="option-color" value="${option.color}">
                         <input type="text" class="option-name form-group" value="${option.name}" placeholder="选项名">
                         <input type="number" class="option-ratio form-group" value="${option.ratio}" min="1" placeholder="比率">
-                        <button class="option-delete-btn">❌</button>`;
+                        <button class="option-delete-btn" aria-label="删除选项"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>`;
                     optionsList.appendChild(item);
                 });
             };
@@ -930,7 +975,7 @@
                     if (t.id === appData.currentTurntableId) li.classList.add('active');
                     li.dataset.id = t.id;
                     li.innerHTML = `<span>${t.name}</span>
-                        ${appData.turntables.length > 1 ? `<button class="delete-turntable-btn" data-id="${t.id}" data-name="${t.name}">🗑️</button>` : ''}`;
+                        ${appData.turntables.length > 1 ? `<button class="delete-turntable-btn" data-id="${t.id}" data-name="${t.name}" aria-label="删除转盘"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg></button>` : ''}`;
                     turntableListEl.appendChild(li);
                 });
             };
