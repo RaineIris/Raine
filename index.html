@@ -495,6 +495,36 @@
                      inset 0 3px 7px rgba(180,85,155,.16);
         }
 
+    
+        /* Consistent floating candy buttons without offset duplicate silhouettes */
+        .top-btn,
+        #add-turntable-btn {
+          box-shadow:0 7px 16px rgba(172,115,183,.17),
+                     0 2px 5px rgba(172,115,183,.10),
+                     inset 0 2px 0 rgba(255,255,255,.88);
+        }
+        #add-turntable-btn {
+          box-shadow:0 7px 16px rgba(193,113,157,.17),
+                     0 2px 5px rgba(193,113,157,.10),
+                     inset 0 2px 0 rgba(255,255,255,.9);
+        }
+        .top-btn:active,
+        #add-turntable-btn:active {
+          transform:translateY(2px) scale(.96);
+          box-shadow:0 2px 7px rgba(172,115,183,.14),
+                     inset 0 2px 4px rgba(173,112,177,.12);
+        }
+        #edit-btn {
+          box-shadow:0 8px 18px rgba(163,111,188,.21),
+                     0 2px 5px rgba(163,111,188,.12),
+                     inset 0 2px 3px rgba(255,255,255,.9);
+        }
+        #edit-btn:active {
+          transform:translateY(2px) scale(.96);
+          box-shadow:0 2px 7px rgba(163,111,188,.18),
+                     inset 0 2px 5px rgba(146,89,174,.14);
+        }
+
     </style>
 </head>
 <body>
