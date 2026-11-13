@@ -404,6 +404,73 @@
         @media(max-height:660px){header{padding-top:22px}.candy-decor .bow{display:none}main{padding-bottom:30px}#edit-btn{bottom:13px}}
         @media(prefers-reduced-motion:reduce){.candy-decor .sparkle{animation:none}#result-display.visible{animation:none}}
 
+    
+        /* Fine-tuning: cheerful candy pointer + aligned option editor */
+        .turntable-pointer{
+          width:58px;height:51px;
+          transform:translate(-50%,33px) rotate(180deg);
+          filter:drop-shadow(0 4px 0 #E4A2C8) drop-shadow(0 6px 5px rgba(180,93,151,.25));
+        }
+        .turntable-pointer path{
+          fill:#F6A3CE;stroke:#FFF8FE;stroke-width:5px;
+          stroke-linejoin:round;paint-order:stroke fill;
+        }
+        .turntable-pointer::after{content:none}
+        #options-list{width:100%;margin-top:12px;padding:0 2px 4px}
+        #options-list .option-item{
+          display:grid;grid-template-columns:34px minmax(0,1fr) 62px 34px;
+          align-items:center;column-gap:9px;
+          width:100%;min-height:52px;margin:0 0 9px;
+          padding:5px 2px;border-radius:14px;
+        }
+        #options-list .option-item .option-color{
+          display:block;min-width:30px;width:30px;height:30px;
+          margin:0;justify-self:center;flex-shrink:0;
+          border:2px solid #fff;border-radius:50%;
+          box-shadow:0 1px 5px rgba(169,111,163,.2);
+        }
+        #options-list .option-item .option-name,
+        #options-list .option-item .option-ratio{
+          display:block;box-sizing:border-box;min-width:0;
+          width:100%;height:42px;min-height:42px;
+          padding:7px 10px;margin:0;
+          border:2px solid #EFD5E8;border-radius:13px;
+          font:inherit;font-size:16px;line-height:24px;
+          background:#fff;color:#70557D;
+        }
+        #options-list .option-item .option-ratio{
+          padding:7px 5px;text-align:center;
+          -moz-appearance:textfield;appearance:textfield;
+        }
+        #options-list .option-item .option-ratio::-webkit-inner-spin-button,
+        #options-list .option-item .option-ratio::-webkit-outer-spin-button{
+          -webkit-appearance:none;margin:0;
+        }
+        #options-list .option-item .option-delete-btn{
+          display:grid;place-items:center;
+          width:34px;height:38px;margin:0;padding:0;
+          border:0;border-radius:12px;background:transparent;
+          color:#C781A2;touch-action:manipulation;
+          transition:background .15s,color .15s,transform .15s;
+        }
+        #options-list .option-item .option-delete-btn .ui-icon{width:21px;height:21px}
+        #options-list .option-item .option-delete-btn.delete-armed{
+          background:#FFE1E9;color:#C64777;
+          box-shadow:inset 0 0 0 2px #F5B6CA;
+          transform:scale(1.07);
+        }
+        #options-list .option-item .option-delete-btn.delete-armed .ui-icon{
+          stroke-width:2.8;
+        }
+        .bulk-add-container{width:100%;gap:10px}
+        .bulk-add-container input{min-width:0;width:100%;height:45px}
+        @media(max-width:390px){
+          #options-list .option-item{grid-template-columns:30px minmax(0,1fr) 53px 30px;column-gap:6px}
+          #options-list .option-item .option-color{width:27px;height:27px;min-width:27px}
+          #options-list .option-item .option-name,#options-list .option-item .option-ratio{font-size:15px;padding-left:7px;padding-right:7px}
+          #options-list .option-item .option-delete-btn{width:30px}
+        }
+
     </style>
 </head>
 <body>
@@ -881,10 +948,29 @@
             });
 
             optionsList.addEventListener('click', (e) => {
-                if (e.target.classList.contains('option-delete-btn')) {
-                    const index = parseInt(e.target.closest('.option-item').dataset.index);
-                    currentEditTurntable.options.splice(index, 1); renderOptionsList();
+                const deleteBtn = e.target.closest('.option-delete-btn');
+                if (deleteBtn && !isBulkDeleteMode) {
+                    const item = deleteBtn.closest('.option-item');
+                    if (!deleteBtn.classList.contains('delete-armed')) {
+                        optionsList.querySelectorAll('.option-delete-btn.delete-armed').forEach(btn => {
+                            btn.classList.remove('delete-armed');
+                            btn.setAttribute('aria-label', '删除选项');
+                            btn.title = '';
+                        });
+                        deleteBtn.classList.add('delete-armed');
+                        deleteBtn.setAttribute('aria-label', '再次点击确认删除');
+                        deleteBtn.title = '再点一次删除';
+                        return;
+                    }
+                    const index = parseInt(item.dataset.index);
+                    currentEditTurntable.options.splice(index, 1);
+                    renderOptionsList();
                 } else if (isBulkDeleteMode) e.target.closest('.option-item')?.classList.toggle('selected-for-delete');
+                else optionsList.querySelectorAll('.option-delete-btn.delete-armed').forEach(btn => {
+                    btn.classList.remove('delete-armed');
+                    btn.setAttribute('aria-label', '删除选项');
+                    btn.title = '';
+                });
             });
             
             const startLongPress = (e) => {
