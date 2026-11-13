@@ -482,6 +482,19 @@
           fill:url(#pointer-jelly);stroke:#FFF9FF;stroke-width:5px;
         }
 
+    
+        /* Keep the jelly button visually concentric: soft depth without a second offset disc */
+        #spin-btn{
+          box-shadow:0 5px 14px rgba(181,97,159,.23),
+                     0 1px 3px rgba(181,97,159,.12),
+                     inset 0 3px 6px rgba(255,255,255,.9),
+                     inset 0 -4px 8px rgba(180,85,155,.13);
+        }
+        #spin-btn:active{
+          box-shadow:0 2px 7px rgba(181,97,159,.22),
+                     inset 0 3px 7px rgba(180,85,155,.16);
+        }
+
     </style>
 </head>
 <body>
