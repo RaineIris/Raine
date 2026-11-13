@@ -699,9 +699,10 @@
             const longPressDuration = 800;
             
             const pastelColors = [
-                '#B9CADD','#DCE6F0','#9EB5CE','#CBD8E6','#A8BFD2','#E7EDF5','#8FA9C3','#CFDBE9',
-                '#B3C4D5','#D6E1EC','#9FB1C5','#E3EAF2','#B7C9DD','#C9D7E6','#A4BAD0','#EEF2F7',
-                '#A7C1D2','#D9E3EF','#91AAC2','#D3DEEA','#BFCFE0','#E6ECF3','#A8BCD2','#CAD8E8'
+                '#F7BED9','#D7C4F5','#FFE0B8','#BFE9DC','#BFDDF8','#F7D4E7',
+                '#E6D5FA','#FFF0BC','#C9EACD','#C7D0FA','#F6C7C5','#C9E8F0',
+                '#F3D7A7','#DCC9F1','#C9E7D6','#F9CDE5','#D5DDF8','#FFE4CA',
+                '#C8E9EB','#E7D1F7','#F9D6BC','#CDE6FA','#D7E8C5','#EED4E8'
             ];
 
             const saveData = () => localStorage.setItem('sakuraTurntableApp', JSON.stringify(appData));
@@ -715,7 +716,7 @@
                         turntables: [{
                             id: defaultTurntableId, name: '我的第一个转盘',
                             resultPrefix: '刚刚抽中了',
-                            options: [{ name: '选项1', color: '#FFADAD', ratio: 1 }, { name: '选项2', color: '#CAFFBF', ratio: 1 }],
+                            options: [{ name: '选项1', color: pastelColors[0], ratio: 1 }, { name: '选项2', color: pastelColors[1], ratio: 1 }],
                             settings: { speed: 5, removeAfterSelect: false, clickToStop: false }
                         }],
                         currentTurntableId: defaultTurntableId,
