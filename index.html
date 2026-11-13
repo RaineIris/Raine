@@ -471,6 +471,17 @@
           #options-list .option-item .option-delete-btn{width:30px}
         }
 
+    
+        /* Soft jelly pointer: compact, rounded and glossy, not a thick sign */
+        .turntable-pointer{
+          width:56px;height:53px;
+          transform:translate(-50%,34px) rotate(180deg);
+          filter:drop-shadow(0 -2px 2px rgba(255,255,255,.65)) drop-shadow(0 4px 4px rgba(179,91,151,.24));
+        }
+        .turntable-pointer .pointer-jelly-body{
+          fill:url(#pointer-jelly);stroke:#FFF9FF;stroke-width:5px;
+        }
+
     </style>
 </head>
 <body>
@@ -489,8 +500,22 @@
         <main>
             <div id="result-display"></div>
             <div class="turntable-container">
-                <svg class="turntable-pointer" viewBox="0 0 56 45" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M28 0 L56 45 L0 45 Z" />
+                <svg class="turntable-pointer" viewBox="0 0 64 61" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="pointer-jelly" x1="0" y1="0" x2=".85" y2="1">
+                            <stop offset="0" stop-color="#E881B6"/>
+                            <stop offset=".43" stop-color="#F6A5D0"/>
+                            <stop offset="1" stop-color="#FFD5EA"/>
+                        </linearGradient>
+                        <linearGradient id="pointer-shine" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#FFFFFF" stop-opacity=".95"/>
+                            <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+                        </linearGradient>
+                    </defs>
+                    <path class="pointer-jelly-body" d="M32 4 C29.5 4 27.5 6 25.8 8.6 L4.9 43.9 C1.5 49.6 5.3 56 12 56 H52 C58.7 56 62.5 49.6 59.1 43.9 L38.2 8.6 C36.5 6 34.5 4 32 4 Z" fill="url(#pointer-jelly)" stroke="#FFF9FF" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M30.3 11.5 C30.9 10.5 33 10.5 33.7 11.5 L52.3 43.5 C54 46.4 52.6 49 49.5 49 H15 C12 49 10.5 46.5 12.2 43.5 Z" fill="url(#pointer-shine)" opacity=".34"/>
+                    <path d="M27 16 Q32 9 37 16" fill="none" stroke="#FFFFFF" stroke-width="3.4" stroke-linecap="round" opacity=".88"/>
+                    <ellipse cx="47" cy="44" rx="3" ry="5" fill="#FFFFFF" opacity=".62" transform="rotate(-29 47 44)"/>
                 </svg>
                 <div class="turntable-wrapper">
                     <canvas id="turntable-canvas"></canvas>
