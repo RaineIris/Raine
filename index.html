@@ -691,6 +691,22 @@
           #result-text{padding:17px 9px}
         }
 
+    
+        .data-storage-note{
+          margin:13px 2px 14px;font-size:12px;line-height:1.7;
+          color:#967F9B;text-align:left;
+        }
+        .data-clear-btn{
+          width:100%;min-height:43px;padding:10px 15px;cursor:pointer;
+          border:1px solid #F1CEDC;border-radius:13px;
+          background:linear-gradient(145deg,#FFF9FC,#FCEAF1);
+          color:#B65E80;font:600 14px inherit;
+          box-shadow:0 4px 10px rgba(181,105,145,.09),
+            inset 0 2px 3px rgba(255,255,255,.95),
+            inset 0 -3px 4px rgba(202,124,159,.09);
+        }
+        .data-clear-btn:active{transform:translateY(1px)}
+
     </style>
 </head>
 <body>
@@ -799,6 +815,8 @@
                         <button id="import-data-btn" class="modal-btn secondary-btn">导入数据</button>
                         <button id="export-data-btn" class="modal-btn secondary-btn">导出数据</button>
                     </div>
+                    <p class="data-storage-note">数据保存在当前浏览器中，换浏览器或设备不会自动同步。重要的转盘记得导出备份。</p>
+                    <button id="clear-app-data-btn" class="data-clear-btn" type="button">清空所有数据</button>
                     <input type="file" id="import-file-input" accept=".json" style="display: none;">
                 </div>
 
@@ -1316,6 +1334,26 @@
                 const importDataBtn = document.getElementById('import-data-btn');
                 const exportDataBtn = document.getElementById('export-data-btn');
                 const importFileInput = document.getElementById('import-file-input');
+                const clearAppDataBtn = document.getElementById('clear-app-data-btn');
+                clearAppDataBtn.addEventListener('click', async () => {
+                    const confirmed = await showConfirm('这会删除当前浏览器保存的所有转盘和设置，且无法撤销。建议先导出备份。确定清空吗？', '清空所有数据');
+                    if (!confirmed) return;
+                    try {
+                        localStorage.removeItem('sakuraTurntableApp');
+                        loadData();
+                        currentWinner = null;
+                        resultDisplay.classList.remove('visible');
+                        resultDisplay.textContent = '';
+                        hideModal(settingsModal);
+                        updateUI();
+                        resizeCanvas();
+                        await showAlert('已清空，转盘已恢复初始状态。', '完成');
+                    } catch (error) {
+                        console.error('Failed to clear turntable data:', error);
+                        await showAlert('清空失败，请稍后重试。', '错误');
+                    }
+                });
+
 
                 exportDataBtn.addEventListener('click', async () => {
                     try {
